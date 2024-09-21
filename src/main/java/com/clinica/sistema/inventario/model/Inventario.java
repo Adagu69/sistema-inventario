@@ -3,9 +3,9 @@ package com.clinica.sistema.inventario.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Data // anotacion que genera los metodos getter, setter, equals, hashcode y toString
+@NoArgsConstructor // anotacion que genera un constructor sin argumentos
+@AllArgsConstructor // anotacion que genera un constructor con todos los argumentos
 @ToString
 @EqualsAndHashCode
 @Entity

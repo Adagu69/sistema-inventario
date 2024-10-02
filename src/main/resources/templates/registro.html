@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Registro de usuarios</title>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+
+	<link rel="shortcut icon" th:href="@{/images/favicon.svg}" type="image/x-icon">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+</head>
+<body>
+
+
+	<!--nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" th:href="@{/}">Registro y
+					inicio de sesión</a>
+			</div>
+		</div>
+	<nav-->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5 col-sm-12 mx-auto">
+				<div class="card pt-4">
+					<div class="card-body">
+						<div class="text-center mb-5">
+							<img th:src="@{/images/favicon.svg}" height="48" class='mb-4'>
+							<h3>Registrate</h3>
+							<p>Registrate para continuar en LogicEUF</p>
+						</div>
+				<div th:if="${param.exito}">
+					<div class="alert alert-info">Se ha registrado exitosamente a
+						la aplicación</div>
+				</div>
+
+				<form th:action="@{/registro}" method="post" th:object="${usuario}">
+
+					<div class="form-group position-relative has-icon-left">
+						<label for="nombre">Nombre de usuario :</label>
+						<div class="position-relative">
+							<input type="text" class="form-control" id="nombre" th:field="*{nombre}" required autofocus="autofocus" >
+							<div class="form-control-icon">
+								<i data-feather="user"></i>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group position-relative has-icon-left">
+						<div class="clearfix">
+							<label for="apellido">Apellido :</label>
+						</div>
+						<div class="position-relative">
+							<input class="form-control" id="apellido" th:field="*{apellido}" required autofocus="autofocus">
+							<div class="form-control-icon">
+								<i data-feather="lock"></i>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group position-relative has-icon-left">
+						<label for="email">Email :</label>
+						<div class="position-relative">
+							<input type="email" class="form-control" id="email" th:field="*{email}" required autofocus="autofocus" >
+							<div class="form-control-icon">
+								<i data-feather="user"></i>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group position-relative has-icon-left">
+						<label for="password">Password :</label>
+						<div class="position-relative">
+							<input type="password" class="form-control" id="password" th:field="*{password}" required autofocus="autofocus" >
+							<div class="form-control-icon">
+								<i data-feather="user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<button type="submit" class="btn btn-success">Registrar</button>
+						<span>Si estas registrado <a th:href="@{/login}">inicia sesión aqui</a></span>
+					</div>
+				</form>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
+
+	<script th:src="@{/js/feather.min.js}"></script>
+	<script th:src="@{/js/app.js}"></script>
+
+	<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

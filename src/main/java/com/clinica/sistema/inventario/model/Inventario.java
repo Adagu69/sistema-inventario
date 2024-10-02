@@ -8,13 +8,13 @@ import lombok.*;
 @AllArgsConstructor // anotacion que genera un constructor con todos los argumentos
 @ToString
 @EqualsAndHashCode
-@Entity
+@Entity // anotacion que indica que la clase es una entidad
 @Table(name = "inventarios")
 public class Inventario {
 
     @Id
     @Column(name = "idInventario")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // anotacion que indica que el valor es autoincrementable
     private Long idInventario;
 
     @Column(name = "cantidad")
@@ -29,7 +29,7 @@ public class Inventario {
     @Column(name = "estado")
     private String estado;
 
-    @ManyToOne
+    @ManyToOne // anotacion que indica que la relacion es de muchos a uno
     @JoinColumn(name = "producto_id")
     private Producto producto;
 }

@@ -4,16 +4,16 @@ package com.clinica.sistema.inventario.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Collection;
+import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuarios",uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Usuario {
 
     @Id
@@ -30,19 +30,42 @@ public class Usuario {
     private String apellido;
 
     @NotNull
-    @Column(name = "correo", nullable = false,unique = true)
-    @Pattern(regexp = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", message = "El correo no es valido")
-    private String correo;
+    @Email(message = "El correo no es válido")
+    @Column(name = "email", nullable = false,unique = true)
+    private String email;
 
     @NotNull
-    @Column(name = "contraseña", nullable = false)
-    private String contraseña;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "area_id")
-    private Area area;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "usuarios_roles",
+            joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "idUsuario"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "idRol")
+    )
+    private Collection<Rol> roles;
 
+    public Usuario(Long idUsuario, String nombre, String apellido, String email, String password, Collection<Rol> roles) {
+        super();
+        this.idUsuario = idUsuario;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
+    public Usuario(String nombre, String apellido, String email, String password, Collection<Rol> roles) {
+        super();
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
+    public Usuario() {
 
+    }
 }

@@ -44,7 +44,7 @@ public class Movimiento {
 
     @ManyToOne
     @JoinColumn(name = "area_id")
-    private Area area;
+    private Rol rol;
 
 
 

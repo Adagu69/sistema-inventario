@@ -7,40 +7,14 @@
 
 	<link rel="shortcut icon" th:href="@{/images/favicon.svg}" type="image/x-icon">
 	<link rel="stylesheet" th:href="@{/css/app.css}">
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-	crossorigin="anonymous">
 
-<!-- Optional theme -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
-	crossorigin="anonymous">
-</head>
 <body>
 
-
-	<!--nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-					aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#" th:href="@{/}">Registro y
-					inicio de sesión</a>
-			</div>
-		</div>
-	<nav-->
+<div id="auth">
 
 	<div class="container">
 		<div class="row">
-			<div class="col-md-5 col-sm-12 mx-auto">
+			<div class="col-md-7 col-sm-12 mx-auto">
 				<div class="card pt-4">
 					<div class="card-body">
 						<div class="text-center mb-5">
@@ -48,56 +22,47 @@
 							<h3>Registrate</h3>
 							<p>Registrate para continuar en LogicEUF</p>
 						</div>
+
 				<div th:if="${param.exito}">
 					<div class="alert alert-info">Se ha registrado exitosamente a
 						la aplicación</div>
 				</div>
 
 				<form th:action="@{/registro}" method="post" th:object="${usuario}">
-
-					<div class="form-group position-relative has-icon-left">
-						<label for="nombre">Nombre de usuario :</label>
-						<div class="position-relative">
-							<input type="text" class="form-control" id="nombre" th:field="*{nombre}" required autofocus="autofocus" >
-							<div class="form-control-icon">
-								<i data-feather="user"></i>
+					<div class="row">
+						<div class="col-md-6 col-12">
+							<div class="form-group">
+								<label for="nombre">Nombre</label>
+								<input type="text" id="nombre" class="form-control"  th:field="*{nombre}" required autofocus="autofocus" >
 							</div>
 						</div>
-					</div>
-
-					<div class="form-group position-relative has-icon-left">
-						<div class="clearfix">
-							<label for="apellido">Apellido :</label>
-						</div>
-						<div class="position-relative">
-							<input class="form-control" id="apellido" th:field="*{apellido}" required autofocus="autofocus">
-							<div class="form-control-icon">
-								<i data-feather="lock"></i>
+						<div class="col-md-6 col-12">
+							<div class="form-group">
+								<label for="apellido">Apellido</label>
+								<input id="apellido" class="form-control"  th:field="*{apellido}" required autofocus="autofocus">
 							</div>
 						</div>
-					</div>
-
-					<div class="form-group position-relative has-icon-left">
-						<label for="email">Email :</label>
-						<div class="position-relative">
-							<input type="email" class="form-control" id="email" th:field="*{email}" required autofocus="autofocus" >
-							<div class="form-control-icon">
-								<i data-feather="user"></i>
+						<div class="col-md-6 col-12">
+							<div class="form-group">
+								<label for="email">Correo</label>
+								<input type="email" id="email" class="form-control" th:field="*{email}" required autofocus="autofocus">
 							</div>
 						</div>
-					</div>
-
-					<div class="form-group position-relative has-icon-left">
-						<label for="password">Password :</label>
-						<div class="position-relative">
-							<input type="password" class="form-control" id="password" th:field="*{password}" required autofocus="autofocus" >
-							<div class="form-control-icon">
-								<i data-feather="user"></i>
+						<div class="col-md-6 col-12">
+							<div class="form-group">
+								<label for="password">Contraseña</label>
+								<input type="password" id="password" class="form-control" th:field="*{password}" required autofocus="autofocus">
 							</div>
 						</div>
-					</div>
+						<label for="role">Rol</label>
+						<select id="role" name="role" class="form-control">
+							<option value="USER">Usuario</option>
+							<option value="ADMIN">Administrador</option>
+						</select>
+					</diV>
+
 					<div class="clearfix">
-						<button type="submit" class="btn btn-success">Registrar</button>
+						<button type="submit" class="btn btn-primary float-end">Registrar</button>
 						<span>Si estas registrado <a th:href="@{/login}">inicia sesión aqui</a></span>
 					</div>
 				</form>
@@ -106,8 +71,7 @@
 				</div>
 			</div>
 		</div>
-
-
+	</div>
 	<!-- Latest compiled and minified JavaScript -->
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"

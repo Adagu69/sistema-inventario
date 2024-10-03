@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface IUsuarioServicio {
 
-    public Usuario guardar(UsuarioRegistroDTO registroDTO);
+    public Usuario guardar(UsuarioRegistroDTO registroDTO, boolean isAdmin);
 
     public List<Usuario> listarUsuarios();
+
+
 }

@@ -3,10 +3,8 @@ package com.clinica.sistema.inventario.controlador;
 import com.clinica.sistema.inventario.controlador.dto.UsuarioRegistroDTO;
 import com.clinica.sistema.inventario.service.IUsuarioServicio;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/registro")
@@ -25,13 +23,16 @@ public class RegistroUsuarioControlador {
     }
 
     @GetMapping
-    public String mostrarFormularioDeRegistro() {
+    public String mostrarFormularioDeRegistro(Model model) {
+        model.addAttribute("usuario", new UsuarioRegistroDTO());
         return "registro";
     }
 
     @PostMapping
-    public String registrarCuentaDeUsuario(@ModelAttribute("usuario") UsuarioRegistroDTO registroDTO) {
-        usuarioServicio.guardar(registroDTO);
+    public String registrarCuentaDeUsuario(UsuarioRegistroDTO registroDTO, @RequestParam("role") String role, Model model) {
+        boolean isAdmin = "ADMIN".equals(role);
+        usuarioServicio.guardar(registroDTO, isAdmin);
+        model.addAttribute("exito", "Usuario registrado exitosamente");
         return "redirect:/registro?exito";
     }
 }

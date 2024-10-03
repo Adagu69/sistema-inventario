@@ -23,6 +23,7 @@ public class RegistroControlador {
     public String iniciarSesion(){
         return "auth-login";
     }
+
     @GetMapping("/")
     public String verPaginaDeInicio(Model modelo) {
         modelo.addAttribute("usuarios", usuarioServicio.listarUsuarios());

@@ -26,29 +26,30 @@
                 </li>
 
                 <li class="sidebar-item active " th:if="${isAdmin}">
-                    <a th:href="@{/}" class='sidebar-link'>
+                    <a th:href="@{/home}" class='sidebar-link'>
                         <i data-feather="home" width="20"></i>
                         <span>Usuarios</span>
                     </a>
                 </li>
 
-
-
-
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i data-feather="briefcase" width="20"></i>
-                        <span>Extra Components</span>
+                        <span>Gestion de Productos</span>
                     </a>
 
                     <ul class="submenu ">
 
                         <li>
-                            <a href="component-extra-avatar.html">Avatar</a>
+                            <a th:href="@{/categoria}" href="component-extra-avatar.html">Categorias</a>
                         </li>
 
                         <li>
-                            <a href="component-extra-divider.html">Divider</a>
+                            <a href="component-extra-divider.html">Productos</a>
+                        </li>
+
+                        <li>
+                            <a href="component-extra-divider.html">Proveedor</a>
                         </li>
 
                     </ul>

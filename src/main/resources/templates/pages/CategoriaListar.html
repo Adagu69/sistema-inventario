@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/dashboard}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+
+    <div class="page-title">
+        <h3>Lista de Categorias</h3>
+        <p class="text-subtitle text-muted"></p>
+    </div>
+
+    <section class="section">
+        <div class="row mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex ">
+                        <button th:if="${isAdmin}" class="btn btn-primary active" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                            Nueva Categoria
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body px-0 pb-0">
+                    <div class="table-responsive">
+
+                        <table class='table mb-0'>
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr th:each="categoria : ${categoria}">
+                                <td th:text="${categoria.nombre}"></td>
+                                <td>
+                                    <button th:if="${isAdmin}"
+                                            class="btn btn-primary active"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editCategoryModal">
+                                        Editar
+                                    </button>
+                                </td>
+                                <td th:if="${isAdmin}">
+                                    <a th:href="@{/eliminar/{id}(id=${categoria.id})}"
+                                       class="btn btn-danger active"
+                                       onclick="return confirm('¿Estás seguro de eliminar la categoría?');">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <nav th:replace="pages/paginator-nav :: paginator"></nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+</div>
+<!-- Modal para Nueva Categoria -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Nueva Categoría</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/guardar}" method="post">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre de la Categoría</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Editar Categoria -->
+<!--div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Editar Categoría</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/actualizar}" method="post">
+                    <input type="hidden" id="editCategoriaId" name="id">
+                    <div class="mb-3">
+                        <label for="editNombre" class="form-label">Nombre de la Categoría</label>
+                        <input type="text" class="form-control" id="editNombre" name="nombre" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div-->
+
+<!-- Después de los modales, agregar la sección de scripts -->
+<!--div layout:fragment="scripts">
+    <script th:inline="javascript">
+        function setEditData(id, nombre) {
+            document.getElementById('editCategoriaId').value = id;
+            document.getElementById('editNombre').value = nombre;
+        }
+
+        // Opcional: Agregar mensaje de éxito/error usando SweetAlert o similar
+        document.addEventListener('DOMContentLoaded', function() {
+            const success = /*[[${success}]]*/ null;
+            const error = /*[[${error}]]*/ null;
+
+            if (success) {
+                // Si tienes SweetAlert u otra librería de notificaciones
+                // Aquí puedes mostrar el mensaje de éxito
+            }
+
+            if (error) {
+                // Aquí puedes mostrar el mensaje de error
+            }
+        });
+    </script>
+</div-->
+
+</body>
+</html>

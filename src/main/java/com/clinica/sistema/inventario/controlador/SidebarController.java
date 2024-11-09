@@ -21,9 +21,5 @@ public class SidebarController {
         return "pages/landing_page";
     }
 
-    @GetMapping("/categoria")
-    public String getCategoriaPage() {
-        return "pages/Categoria";
-    }
 
 }

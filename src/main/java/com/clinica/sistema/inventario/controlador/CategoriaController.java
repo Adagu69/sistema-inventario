@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/")
 public class CategoriaController {
 
     @Autowired
@@ -51,7 +52,7 @@ public class CategoriaController {
         } catch (Exception e) {
             flash.addFlashAttribute("error", "Error al guardar la categoría");
         }
-        return "redirect:/CategoriaListar";
+        return "redirect:/categoria";
     }
 
     @PostMapping("/actualizar")
@@ -66,11 +67,11 @@ public class CategoriaController {
         } catch (Exception e) {
             flash.addFlashAttribute("error", "Error al actualizar la categoría");
         }
-        return "redirect:/CategoriaListar";
+        return "redirect:/categoria";
     }
 
 
-    @GetMapping("/eliminar/{id}")
+    @PostMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id, RedirectAttributes flash) {
         if (id > 0) {
             try {
@@ -80,7 +81,7 @@ public class CategoriaController {
                 flash.addFlashAttribute("error", "Error al eliminar la categoría");
             }
         }
-        return "redirect:/pages/CategoriaListar";
+        return "redirect:/categoria";  // Cambiar a /categoria
     }
 
 

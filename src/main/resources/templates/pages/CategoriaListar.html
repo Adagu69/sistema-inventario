@@ -48,11 +48,32 @@
                                     </button>
                                 </td>
                                 <td th:if="${isAdmin}">
-                                    <a th:href="@{/eliminar/{id}(id=${categoria.id})}"
-                                       class="btn btn-danger active"
-                                       onclick="return confirm('¿Estás seguro de eliminar la categoría?');">
+                                    <!-- Botón que abre el modal -->
+                                    <button type="button" class="btn btn-outline-primary block" th:data-bs-target="${'#deleteModal' + categoria.id}" data-bs-toggle="modal">
                                         Eliminar
-                                    </a>
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade text-left" th:id="${'deleteModal' + categoria.id}" tabindex="-1" role="dialog" th:aria-labelledby="${'deleteModalLabel' + categoria.id}"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" th:id="${'deleteModalLabel' + categoria.id}">Confirmar Eliminación</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>¿Seguro que desea eliminar la categoría?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                    <form th:action="@{/eliminar/{id}(id=${categoria.id})}" method="post" style="display: inline;">
+                                                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
 
@@ -63,8 +84,6 @@
                 </div>
             </div>
         </div>
-
-
     </section>
 
 </div>

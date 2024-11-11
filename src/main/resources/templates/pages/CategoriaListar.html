@@ -18,12 +18,67 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex ">
-                        <button th:if="${isAdmin}" class="btn btn-primary active" data-bs-toggle="modal" data-bs-target="#categoryModal">
-                            Nueva Categoria
+                        <button th:if="${isAdmin}"
+                                class="btn btn-primary active"
+                                data-bs-toggle="modal"
+                                data-bs-target="#categoryModal">
+                            Nueva Categoría
                         </button>
+
+                        <!-- ORDENAR LOS DIVS-->
+
+
+                        <!-- Modal para nueva categoría -->
+                        <div class="modal fade text-left"
+                             id="categoryModal"
+                             tabindex="-1"
+                             role="dialog"
+                             aria-labelledby="categoryModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                 role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="categoryModalLabel">
+                                            Nueva Categoría
+                                        </h4>
+                                        <button type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                        </button>
+                                    </div>
+
+                                    <!-- Formulario para agregar categoría -->
+                                    <form th:action="@{/guardar}" method="POST">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="nombre">Nombre de la categoría:</label>
+                                                <input type="text"
+                                                       id="nombre"
+                                                       name="nombre"
+                                                       class="form-control"
+                                                       placeholder="Ingrese el nombre de la categoría"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button"
+                                                    class="btn btn-light-secondary"
+                                                    data-bs-dismiss="modal">
+                                                <span class="d-none d-sm-block">Cancelar</span>
+                                            </button>
+                                            <button type="submit"
+                                                    class="btn btn-primary ml-1">
+                                                <span class="d-none d-sm-block">Guardar</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 <div class="card-body px-0 pb-0">
                     <div class="table-responsive">
 
@@ -43,10 +98,57 @@
                                     <button th:if="${isAdmin}"
                                             class="btn btn-primary active"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editCategoryModal">
+                                            th:data-bs-target="'#editCategoryModal' + ${categoria.id}">
                                         Editar
                                     </button>
+
+                                    <!-- Modal de edición para cada categoría -->
+                                    <div class="modal fade" th:id="'editCategoryModal' + ${categoria.id}"
+                                         tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Editar Categoría</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close">
+                                                    </button>
+                                                </div>
+                                                <!-- Formulario de edición -->
+                                                <form th:action="@{/actualizar}" method="POST">
+                                                    <div class="modal-body">
+                                                        <!-- Campo oculto para el ID -->
+                                                        <input type="hidden" name="id" th:value="${categoria.id}">
+
+                                                        <div class="form-group mb-3">
+                                                            <label for="nombre" class="form-label">
+                                                                Nombre de la categoría:
+                                                            </label>
+                                                            <input type="text"
+                                                                   class="form-control"
+                                                                   id="nombre1"
+                                                                   name="nombre"
+                                                                   th:value="${categoria.nombre}"
+                                                                   required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button"
+                                                                class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Cancelar
+                                                        </button>
+                                                        <button type="submit"
+                                                                class="btn btn-primary">
+                                                            Guardar cambios
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        </div>
                                 </td>
+
                                 <td th:if="${isAdmin}">
                                     <!-- Botón que abre el modal -->
                                     <button type="button" class="btn btn-outline-primary block" th:data-bs-target="${'#deleteModal' + categoria.id}" data-bs-toggle="modal">
@@ -84,82 +186,27 @@
                 </div>
             </div>
         </div>
+                </div>
+            </div>
     </section>
 
-</div>
-<!-- Modal para Nueva Categoria -->
-<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="categoryModalLabel">Nueva Categoría</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form th:action="@{/guardar}" method="post">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre de la Categoría</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <!-- Mensajes de alerta -->
+    <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+        [[${success}]]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${error != null}"
+         class="alert alert-danger alert-dismissible fade show"
+         role="alert">
+        [[${error}]]
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
     </div>
 </div>
-
-<!-- Modal para Editar Categoria -->
-<!--div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCategoryModalLabel">Editar Categoría</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form th:action="@{/actualizar}" method="post">
-                    <input type="hidden" id="editCategoriaId" name="id">
-                    <div class="mb-3">
-                        <label for="editNombre" class="form-label">Nombre de la Categoría</label>
-                        <input type="text" class="form-control" id="editNombre" name="nombre" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div-->
-
-<!-- Después de los modales, agregar la sección de scripts -->
-<!--div layout:fragment="scripts">
-    <script th:inline="javascript">
-        function setEditData(id, nombre) {
-            document.getElementById('editCategoriaId').value = id;
-            document.getElementById('editNombre').value = nombre;
-        }
-
-        // Opcional: Agregar mensaje de éxito/error usando SweetAlert o similar
-        document.addEventListener('DOMContentLoaded', function() {
-            const success = /*[[${success}]]*/ null;
-            const error = /*[[${error}]]*/ null;
-
-            if (success) {
-                // Si tienes SweetAlert u otra librería de notificaciones
-                // Aquí puedes mostrar el mensaje de éxito
-            }
-
-            if (error) {
-                // Aquí puedes mostrar el mensaje de error
-            }
-        });
-    </script>
-</div-->
 
 </body>
 </html>

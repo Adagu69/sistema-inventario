@@ -23,7 +23,7 @@ public class RegistroControlador {
     @GetMapping("/")
     public String verPaginaDeInicio(Model modelo) {
         modelo.addAttribute("usuarios", usuarioServicio.listarUsuarios());
-        return "index";
+        return "UsuarioListar";
     }
 
     @RequestMapping("/home")

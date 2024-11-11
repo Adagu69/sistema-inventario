@@ -35,7 +35,7 @@ public class CategoriaController {
             model.addAttribute("isAdmin", userDetails.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN")));
         }
-        Pageable pageRequest = PageRequest.of(page, 2);
+        Pageable pageRequest = PageRequest.of(page, 5);
         Page<Categoria> categorias = categoriaServicio.findAll(pageRequest);
         PageRender<Categoria> pageRender = new PageRender<>("/categoria", categorias);
 
@@ -83,10 +83,4 @@ public class CategoriaController {
         }
         return "redirect:/categoria";  // Cambiar a /categoria
     }
-
-
-
-
-
-
 }

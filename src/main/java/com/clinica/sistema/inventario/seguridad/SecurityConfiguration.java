@@ -4,6 +4,8 @@ package com.clinica.sistema.inventario.seguridad;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,6 +23,11 @@ public class SecurityConfiguration{
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
@@ -30,7 +37,7 @@ public class SecurityConfiguration{
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .defaultSuccessUrl("/home",  true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -40,4 +47,6 @@ public class SecurityConfiguration{
 
         return http.build();
     }
+
+
 }

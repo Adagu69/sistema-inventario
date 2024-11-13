@@ -21,6 +21,9 @@ public class UsuarioRegistroDTO {
     }
     //getters and setters
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
     public Long getIdUsuario() {
         return idUsuario;
     }
@@ -57,9 +60,7 @@ public class UsuarioRegistroDTO {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+
 
 
 }

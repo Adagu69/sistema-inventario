@@ -3,9 +3,13 @@ package com.clinica.sistema.inventario.controlador;
 
 import com.clinica.sistema.inventario.controlador.dto.UsuarioRegistroDTO;
 import com.clinica.sistema.inventario.model.Categoria;
+import com.clinica.sistema.inventario.model.Rol;
 import com.clinica.sistema.inventario.model.Usuario;
 import com.clinica.sistema.inventario.service.UsuarioServicio;
 import com.clinica.sistema.inventario.util.paginacion.PageRender;
+import com.clinica.sistema.inventario.util.reportes.UsuarioExporterPDF;
+import com.lowagie.text.DocumentException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +63,7 @@ public class UsuarioControlador {
     @PostMapping("/guardar")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String guardarUsuario(@Valid @ModelAttribute Usuario usuario,
+                                 @RequestParam("role") String role, // Recibimos el parámetro del rol
                                  BindingResult result,
                                  RedirectAttributes flash) {
         if (result.hasErrors()) {
@@ -65,6 +72,16 @@ public class UsuarioControlador {
         }
 
         try {
+            // Asignar el rol al usuario
+            List<Rol> roles = new ArrayList<>();
+            if ("ADMIN".equals(role)) {
+                roles.add(new Rol("ROLE_ADMIN"));
+            } else {
+                roles.add(new Rol("ROLE_USER"));
+            }
+            usuario.setRoles(roles); // Asignamos los roles al usuario
+
+            // Guardar el usuario
             usuarioServicio.save(usuario);
             flash.addFlashAttribute("success", "Usuario guardado con éxito");
         } catch (Exception e) {
@@ -120,5 +137,23 @@ public class UsuarioControlador {
         return Arrays.asList("USER", "ADMIN");
     }
 
+
+    // Método para exportar el reporte en PDF con Jakarta EE
+    @GetMapping("/exportar")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void exportarUsuariosEnPDF(HttpServletResponse response) throws DocumentException, IOException {
+        // Obtener todos los usuarios
+        List<Usuario> usuarios = usuarioServicio.listarUsuarios();
+
+        // Crear el Exportador de PDF
+        UsuarioExporterPDF exporter = new UsuarioExporterPDF(usuarios);
+
+        // Configurar la respuesta HTTP para que sea un archivo PDF
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=usuarios_report.pdf");
+
+        // Exportar el PDF
+        exporter.exportar(response);
+    }
 }
 

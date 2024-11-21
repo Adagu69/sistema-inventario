@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/dashboard}">
+<head>
+    <meta charset="utf-8">
+    <title>Gestión de Inventario</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed"
+                        data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                        aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span
+                        class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Gestión de Inventario</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container"> <br><br><br><br><br><br>
+        <h1>Gestión de Inventario</h1>
+
+        <!-- Botón para exportar reporte en PDF -->
+        <form action="/inventario/exportar" method="get">
+            <button type="submit" class="btn btn-primary mb-3">
+                Generar Reporte PDF
+            </button>
+        </form>
+
+        <!-- Mostrar los inventarios con productos -->
+        <h3>Inventarios</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID Inventario</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Fecha</th> <!-- Nueva columna para la fecha -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="inventario : ${inventarios}">
+                <td th:text="${inventario.idInventario}"></td> <!-- ID del inventario -->
+                <td th:text="${inventario.producto.nombre}"></td> <!-- Nombre del producto -->
+                <td th:text="${inventario.cantidad}"></td> <!-- Cantidad en inventario -->
+                <td th:text="${inventario.precio}"></td> <!-- Precio del producto -->
+                <td th:text="${inventario.estado}"></td> <!-- Estado del inventario -->
+                <td th:text="${inventario.fecha}"></td> <!-- Fecha del inventario -->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

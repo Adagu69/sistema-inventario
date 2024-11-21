@@ -20,6 +20,14 @@
 
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex ">
+
+                        <!-- Botón para exportar reporte en PDF -->
+                        <form action="/usuarios/exportar" method="get">
+                            <button type="submit" class="btn btn-primary">
+                                Generar Reporte PDF
+                            </button>
+                        </form>
+
                         <button th:if="${isAdmin}"
                                 class="btn btn-primary active"
                                 data-bs-toggle="modal"
@@ -124,137 +132,143 @@
                         <table class='table mb-0'>
                             <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Email</th>
-                                <th>Acciones</th>
+                                <th class="d-none">#</th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Apellido</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Rol</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             <tr th:each="usuario : ${usuarios}">
-                                <td th:text="${usuario.idUsuario}"></td>
-                                <td th:text="${usuario.nombre}"></td>
-                                <td th:text="${usuario.apellido}"></td>
-                                <td th:text="${usuario.email}"></td>
+                                <td class="d-none" th:text="${usuario.idUsuario}"></td>
+                                <td class="text-center" th:text="${usuario.nombre}"></td>
+                                <td class="text-center" th:text="${usuario.apellido}"></td>
+                                <td class="text-center" th:text="${usuario.email}"></td>
+                                <td class="text-center">
+                                    <span th:each="rol : ${usuario.roles}"
+                                          th:text="${rol.nombre}"
+                                          class="badge bg-primary me-1"></span>
+                                </td>
                                 <td>
-                                    <button th:if="${isAdmin}"
-                                            class="btn btn-light active"
-                                            data-bs-toggle="modal"
-                                            th:data-bs-target="'#editUsuarioModal' + ${usuario.idUsuario}">
-                                        Editar
-                                    </button>
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <!-- Botón Editar -->
+                                        <button th:if="${isAdmin}"
+                                                class="btn btn-light active"
+                                                data-bs-toggle="modal"
+                                                th:data-bs-target="'#editUsuarioModal' + ${usuario.idUsuario}">
+                                            Editar
+                                        </button>
 
-                                    <!-- Modal de edición para cada usuario -->
-                                    <div class="modal fade" th:id="'editUsuarioModal' + ${usuario.idUsuario}"
-                                         tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Editar Usuario</h5>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal"
-                                                            aria-label="Close">
+                                        <!-- Botón Eliminar -->
+                                        <button type="button" class="btn btn-outline-danger"
+                                                th:data-bs-target="${'#deleteModal' + usuario.idUsuario}"
+                                                data-bs-toggle="modal">
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </td>
+
+                                <!-- Modal de edición para cada usuario -->
+                                <div class="modal fade" th:id="'editUsuarioModal' + ${usuario.idUsuario}"
+                                     tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Editar Usuario</h5>
+                                                <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <!-- Formulario de edición -->
+                                            <form th:action="@{/usuarios/actualizar}" method="POST">
+                                                <div class="modal-body">
+                                                    <!-- Campo oculto para el ID -->
+                                                    <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+
+                                                    <div class="form-group mb-3">
+                                                        <label for="nombre" class="form-label">
+                                                            Nombre del usuario:
+                                                        </label>
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               id="nombre1"
+                                                               name="nombre"
+                                                               th:value="${usuario.nombre}"
+                                                               required>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label for="apellido" class="form-label">
+                                                            Apellido del usuario:
+                                                        </label>
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               id="apellido1"
+                                                               name="apellido"
+                                                               th:value="${usuario.apellido}"
+                                                               required>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label for="email" class="form-label">
+                                                            Email del usuario:
+                                                        </label>
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               id="email1"
+                                                               name="email"
+                                                               th:value="${usuario.email}"
+                                                               required>
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button"
+                                                            class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Cancelar
+                                                    </button>
+                                                    <button type="submit"
+                                                            class="btn btn-primary">
+                                                        Guardar cambios
                                                     </button>
                                                 </div>
-                                                <!-- Formulario de edición -->
-                                                <form th:action="@{/usuarios/actualizar}" method="POST">
-                                                    <div class="modal-body">
-                                                        <!-- Campo oculto para el ID -->
-                                                        <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                                        <div class="form-group mb-3">
-                                                            <label for="nombre" class="form-label">
-                                                                Nombre del usuario:
-                                                            </label>
-                                                            <input type="text"
-                                                                   class="form-control"
-                                                                   id="nombre1"
-                                                                   name="nombre"
-                                                                   th:value="${usuario.nombre}"
-                                                                   required>
-                                                        </div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="apellido" class="form-label">
-                                                                Apellido del usuario:
-                                                            </label>
-                                                            <input type="text"
-                                                                   class="form-control"
-                                                                   id="apellido1"
-                                                                   name="apellido"
-                                                                   th:value="${usuario.apellido}"
-                                                                   required>
-                                                        </div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="email" class="form-label">
-                                                                Email del usuario:
-                                                            </label>
-                                                            <input type="text"
-                                                                   class="form-control"
-                                                                   id="email1"
-                                                                   name="email"
-                                                                   th:value="${usuario.email}"
-                                                                   required>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button"
-                                                                class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">
-                                                            Cancelar
-                                                        </button>
-                                                        <button type="submit"
-                                                                class="btn btn-primary">
-                                                            Guardar cambios
-                                                        </button>
-                                                    </div>
+                                <!-- Modal Eliminar -->
+                                <div class="modal fade text-left" th:id="${'deleteModal' + usuario.idUsuario}"
+                                     tabindex="-1" role="dialog"
+                                     th:aria-labelledby="${'deleteModalLabel' + usuario.idUsuario}"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    th:id="${'deleteModalLabel' + usuario.idUsuario}">Confirmar
+                                                    Eliminación</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>¿Seguro que desea eliminar la categoría?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cerrar
+                                                </button>
+                                                <form th:action="@{/usuarios/eliminar/{id}(id=${usuario.idUsuario})}"
+                                                      method="post" style="display: inline;">
+                                                    <button type="submit" class="btn btn-primary">Aceptar</button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-
-                                <td th:if="${isAdmin}">
-                                    <!-- Botón que abre el modal -->
-                                    <button type="button" class="btn btn-outline-danger block"
-                                            th:data-bs-target="${'#deleteModal' + usuario.idUsuario}"
-                                            data-bs-toggle="modal">
-                                        Eliminar
-                                    </button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade text-left" th:id="${'deleteModal' + usuario.idUsuario}"
-                                         tabindex="-1" role="dialog"
-                                         th:aria-labelledby="${'deleteModalLabel' + usuario.idUsuario}"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title"
-                                                        th:id="${'deleteModalLabel' + usuario.idUsuario}">Confirmar
-                                                        Eliminación</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>¿Seguro que desea eliminar la categoría?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Cerrar
-                                                    </button>
-                                                    <form th:action="@{/usuarios/eliminar/{id}(id=${usuario.idUsuario})}"
-                                                          method="post" style="display: inline;">
-                                                        <button type="submit" class="btn btn-primary">Aceptar</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </td>
-                                </td>
-
+                                </div>
 
                             </tr>
 
@@ -265,7 +279,7 @@
                 </div>
             </div>
         </div>
-</section>
+    </section>
 </div>
 </div>
 </body>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/dashboard}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+
+  <div class="page-title">
+    <h3>Lista de Productos</h3>
+    <p class="text-subtitle text-muted"></p>
+  </div>
+
+  <section class="section">
+    <div class="row mb-4">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div class="d-flex">
+            <button th:if="${isAdmin}" class="btn btn-primary active" data-toggle="modal" data-target="#modalNuevoProducto">
+              Nuevo Producto
+            </button>
+
+            <!-- Modal para nuevo producto -->
+            <div class="modal fade text-left"
+                 id="modalNuevoProducto"
+                 tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="modalNuevoProductoLabel"
+                    aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                   role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modalNuevoProductoLabel">Nuevo Producto</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <!-- Formulario para agregar producto -->
+                  <form th:action="@{/producto/agregar}" method="post">
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="nombre">Nombre del Producto:</label>
+                        <input type="text" class="form-control" placeholder="Ingrese el nombre del producto" id="nombre" name="nombre" required>
+                      </div>
+                        <div class="form-group">
+                            <label for="descripcion">Descripción:</label>
+                            <textarea class="form-control" placeholder="Ingrese la descripción del producto" id="descripcion" name="descripcion" required></textarea>
+                        </div>
+                      <div class="form-group">
+                        <!-- para seleccionar la categoria -->
+                        <label for="categoria">Categoría:</label>
+                        <select class="form-control" id="categoria" name="categoria" required>
+                          <option value="">Seleccione una categoría</option>
+                          <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombre}"></option>
+                        </select>
+                      </div>
+                        <div class="form-group">
+                            <label for="proveedor">Proveedor:</label>
+                            <select class="form-control" id="proveedor" name="proveedor" required>
+                                <option value="">Seleccione un proveedor</option>
+                                <option th:each="proveedor : ${proveedores}" th:value="${proveedor.idProveedor}" th:text="${proveedor.nombre}"></option>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                          <span class="d-none d-sm-block">Cancelar</span>
+                        </button>
+                        <button type="submit" class="btn btn-primary ml-1">
+                          <span class="d-none d-sm-block">Guardar</span>
+                        </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body px-0 pb-0">
+          <div class="table-responsive">
+            <table class="table-responsive">
+              <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Proveedor</th>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr th:each="producto : ${producto}">
+                    <td th:text="${producto.nombre }"></td>
+                    <td th:text="${producto.descripcion}"></td>
+                    <td th:text="${producto.categoria.nombre}"></td>
+                    <td th:text="${producto.proveedor.nombre}"></td>
+                    <td>
+                    <button th:if="${isAdmin}"
+                            class="btn btn-primary active"
+                            data-bs-toggle="modal"
+                            th:data-bs-target="'#editProductoModal' + ${producto.idProducto}">
+                        Editar
+                    </button>
+                      <!-- Modal de edición para cada producto -->
+                      <div class="modal fade" th:id="'editProductoModal' + ${producto.idProducto}"
+                           tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Editar Producto</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                              </button>
+                            </div>
+                            <!-- Formulario de edición -->
+                            <form th:action="@{/producto/actualizar}" method="post">
+                              <div class="modal-body">
+
+                                <input type="hidden" name="id" th:value="${producto.idProducto}">
+
+                                <div class="form-group mb-3">
+                                  <label for="nombre" class="form-label">
+                                    Nombre del Producto:
+                                  </label>
+                                  <input type="text" class="form-control" id="nombre1" name="nombre" th:value="${producto.nombre}" required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                  <label for="descripcion" class="form-label">
+                                    Descripcion del Producto:
+                                  </label>
+                                  <input type="text" class="form-control" id="descripcion1" name="descripcion" th:value="${producto.descripcion}" required>
+                                </div>
+                                <!-- div para seleccionar la categoria -->
+                                <div class="form-group mb-3">
+                                    <label for="categoria" class="form-label">
+                                        Categoria:
+                                    </label>
+                                    <select class="form-control" id="categoria1" name="categoria" required>
+                                        <option value="">Seleccione una categoria</option>
+                                        <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nombre}"></option>
+                                    </select>
+                                </div>
+                                <!-- div para seleccionar el proveedor -->
+                                <div class="form-group mb-3">
+                                    <label for="proveedor" class="form-label">
+                                        Proveedor:
+                                    </label>
+                                    <select class="form-control" id="proveedor1" name="proveedor" required>
+                                        <option value="">Seleccione un proveedor</option>
+                                        <option th:each="proveedor : ${proveedores}" th:value="${proveedor.idProveedor}" th:text="${proveedor.nombre}"></option>
+                                    </select>
+                                </div>
+                              </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                    Guardar
+                                    </button>
+                                </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td th:if="${isAdmin}">
+                    <button type="button" class="btn btn-outline-primary block" data-toggle="modal"
+                            th:data-bs-target="${'#deleteModal'+ producto.idProducto}" >
+                        Eliminar
+                    </button>
+
+                        <!-- Modal de eliminación para cada producto -->
+                        <div class="modal fade text-left" th:id="${'deleteModal' + producto.idProducto}" tabindex="-1" role="dialog"
+                             th:aria-labelledby="${'deleteModalLabel' + producto.idProducto}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" th:id="${'deleteModalLabel' + producto.idProducto}"> Confirmar Eliminacion</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p>¿Está seguro de que desea eliminar el producto <strong th:text="${producto.nombre}"></strong>?</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <form th:action="@{/producto/eliminar/{id}(id=${producto.idProducto})}" method="post" style="display: inline;">
+                                  <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+            <nav th:replace="pages/paginator-nav :: paginator"></nav>
+          </div>
+        </div>
+      </div>
+</div>
+  </section>
+</div>
+</div>
+</div>
+</body>
+</html>

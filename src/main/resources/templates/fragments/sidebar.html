@@ -45,18 +45,23 @@
                         </li>
 
                         <li>
-                            <a href="component-extra-divider.html">Productos</a>
+                            <a th:href="@{/producto}" href="component-extra-divider.html">Productos</a>
                         </li>
 
                         <li>
-                            <a href="component-extra-divider.html">Proveedor</a>
+                            <a th:href="@{/proveedor}" href="component-extra-divider.html">Proveedor</a>
                         </li>
 
                     </ul>
 
                 </li>
 
-
+                <li class="sidebar-item">
+                    <a th:href="@{/inventario}" class='sidebar-link'>
+                        <i data-feather="layout" width="20"></i>
+                        <span>Inventario</span>
+                    </a>
+                </li>
 
 
                 <li class='sidebar-title'>Forms &amp; Tables</li>

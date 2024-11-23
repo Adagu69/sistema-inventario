@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/dashboard}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Salidas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="container mt-5">
+        <!-- Header -->
+        <div class="header text-center">
+            <h4>REGISTRO DE SALIDAS</h4>
+        </div>
+
+        <!-- Formulario -->
+        <div class="form-container mt-3">
+            <form th:action="@{/salidas}" th:object="${movimiento}" method="post">
+                <div class="row">
+                    <!-- Producto -->
+                    <div class="col-md-6 mb-3">
+                        <label for="producto" class="form-label">Producto:</label>
+                        <input type="text" class="form-control" id="producto" th:field="*{producto.nombre}" placeholder="Ingrese el nombre del producto">
+                    </div>
+                    <!-- Cantidad -->
+                    <div class="col-md-3 mb-3">
+                        <label for="cantidad" class="form-label">Cantidad:</label>
+                        <input type="number" class="form-control" id="cantidad" th:field="*{cantidad}" placeholder="Ingrese la cantidad" min="1" required>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="estado" class="form-label">Estado:</label>
+                        <input type="text" class="form-control" id="estado" th:field="*{estado}" placeholder="Estado del producto">
+                    </div>
+                </div>
+                <!-- Botones -->
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn btn-primary">GUARDAR</button>
+                    <button type="reset" class="btn btn-secondary">LIMPIAR</button>
+                    <a href="#" class="btn btn-danger">SALIR</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Salidas Registradas -->
+        <div class="table-container">
+            <h5 class="mt-4">Salidas Registradas</h5>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="movimiento : ${movimientos}">
+                    <td th:text="${movimiento.producto.nombre}">Producto</td>
+                    <td th:text="${movimiento.cantidad}">Cantidad</td>
+                    <td th:text="${movimiento.estado}">Estado</td>
+                    <td th:text="${#dates.format(movimiento.fecha, 'yyyy-MM-dd')}">Fecha</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

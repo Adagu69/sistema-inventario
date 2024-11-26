@@ -46,23 +46,27 @@ public class Usuario {
     )
     private Collection<Rol> roles;
 
-    public Usuario(Long idUsuario, String nombre, String apellido, String email, String password, Collection<Rol> roles) {
-        super();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private Estado estado = Estado.ACTIVO;
+
+    public Usuario(Long idUsuario, String nombre, String apellido, String email, String password, Collection<Rol> roles,Estado estado) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.estado = estado;
     }
 
-    public Usuario(String nombre, String apellido, String email, String password, Collection<Rol> roles) {
-        super();
+    public Usuario(String nombre, String apellido, String email, String password, Collection<Rol> roles, Estado estado) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.estado = estado != null ? estado : Estado.ACTIVO; // Si no se pasa un estado, se asigna "ACTIVO"
     }
 
     public Usuario() {

@@ -8,6 +8,12 @@
 <body>
 <div class="main-content container-fluid" layout:fragment="content">
 
+    <!-- Botón para exportar reporte en PDF -->
+    <form action="/productos/exportar" method="get">
+        <button type="submit" class="btn btn-primary mb-3">
+            Generar Reporte PDF
+        </button>
+    </form>
 
     <div class="page-title">
         <h3>Lista de Productos</h3>
@@ -16,6 +22,14 @@
 
     <section class="section">
         <div class="row mb-4">
+
+            <!-- Formulario de búsqueda -->
+            <form action="/producto/buscar" method="get" class="mb-3">
+                <input type="text" name="nombreProducto" placeholder="Buscar por nombre del producto" class="form-control d-inline-block" style="width: 300px;">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+
+
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex">

@@ -22,7 +22,6 @@
                         <div class="text-center mb-5">
                             <img th:src="@{/images/favicon.svg}" height="48" class='mb-4'>
                             <h3>Iniciar Sesion</h3>
-                            <p>Inicia Sesion para continuar en LogicEUF</p>
                         </div>
                         <form th:action="@{/login}" method="post">
 
@@ -35,8 +34,7 @@
                             </div>
 
                             <div class="form-group position-relative has-icon-left">
-                                <label for="username">Nombre de
-                                    usuario :</label>
+                                <label for="username">Correo electronico:</label>
                                 <div class="position-relative">
                                     <input type="text" class="form-control" id="username" name="username" required>
                                     <div class="form-control-icon">
@@ -69,19 +67,6 @@
                         <div class="form-group">
 					<span>Si eres nuevo usuario <a th:href="@{/registro}">regístrate
 							aqui</a></span>
-                        </div>
-                        <div class="divider">
-                            <div class="divider-text">OR</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <button class="btn btn-block mb-2 btn-light"><i data-feather="gmail"></i>
-                                    Gmail</button>
-                            </div>
-                            <div class="col-sm-6">
-                                <button class="btn btn-block mb-2 btn-secondary"><i data-feather="github"></i>
-                                    Github</button>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.List;
@@ -24,6 +25,14 @@ public class InventarioController {
         // Obtener todos los inventarios de la base de datos
         List<Inventario> inventarioList = inventarioRepositorio.findAll();
         model.addAttribute("inventarios", inventarioList); // Pasar la lista de inventarios a la vista
+        return "inventario"; // Redirigir a la vista inventario.html
+    }
+
+    // Buscar inventarios por nombre del producto
+    @GetMapping("/inventario/buscar")
+    public String buscarInventarios(@RequestParam("nombreProducto") String nombreProducto, Model model) {
+        List<Inventario> inventarios = inventarioRepositorio.findByProductoNombreContainingIgnoreCase(nombreProducto);
+        model.addAttribute("inventarios", inventarios); // Pasar los inventarios filtrados a la vista
         return "inventario"; // Redirigir a la vista inventario.html
     }
 

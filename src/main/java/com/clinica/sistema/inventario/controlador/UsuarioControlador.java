@@ -3,6 +3,7 @@ package com.clinica.sistema.inventario.controlador;
 
 import com.clinica.sistema.inventario.controlador.dto.UsuarioRegistroDTO;
 import com.clinica.sistema.inventario.model.Categoria;
+import com.clinica.sistema.inventario.model.Estado;
 import com.clinica.sistema.inventario.model.Rol;
 import com.clinica.sistema.inventario.model.Usuario;
 import com.clinica.sistema.inventario.service.UsuarioServicio;
@@ -41,7 +42,9 @@ public class UsuarioControlador {
 
     @GetMapping("")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public String listarUsuarios(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String listarUsuarios(@RequestParam(name = "page", defaultValue = "0") int page,
+                                 @RequestParam(name = "buscar", required = false) String buscar,
+                                 Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication != null &&
                 authentication.getAuthorities().stream()
@@ -50,12 +53,21 @@ public class UsuarioControlador {
         model.addAttribute("isAdmin", isAdmin);
 
         Pageable pageRequest = PageRequest.of(page, 5);
-        Page<Usuario> usuarios = usuarioServicio.findAll(pageRequest);
+        Page<Usuario> usuarios;
+
+        // Si el parámetro 'buscar' no es null o vacío, realizar la búsqueda por nombre
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            usuarios = usuarioServicio.buscarUsuariosPorNombre(buscar, pageRequest); // Llamar a la función de búsqueda por nombre
+        } else {
+            usuarios = usuarioServicio.findAll(pageRequest); // Obtener todos los usuarios si no hay búsqueda
+        }
+
         PageRender<Usuario> pageRender = new PageRender<>("/usuarios", usuarios);
 
         model.addAttribute("titulo", "Listado de Usuarios");
         model.addAttribute("usuarios", usuarios.getContent());
         model.addAttribute("page", pageRender);
+        model.addAttribute("buscar", buscar); // Añadir el parámetro de búsqueda al modelo
 
         return "UsuarioListar";
     }
@@ -80,6 +92,11 @@ public class UsuarioControlador {
                 roles.add(new Rol("ROLE_USER"));
             }
             usuario.setRoles(roles); // Asignamos los roles al usuario
+
+            // Asignar el estado como ACTIVO
+            usuario.setEstado(Estado.ACTIVO);
+
+            usuarioServicio.save(usuario);
 
             // Guardar el usuario
             usuarioServicio.save(usuario);
@@ -120,14 +137,39 @@ public class UsuarioControlador {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String eliminar(@PathVariable Long id, RedirectAttributes flash) {
         try {
-            if (usuarioServicio.findById(id).isPresent()) {
-                usuarioServicio.delete(id);
-                flash.addFlashAttribute("success", "Usuario eliminado con éxito");
+            // Buscar el usuario por ID
+            Optional<Usuario> usuarioOptional = usuarioServicio.findById(id);
+
+            // Verificar si el usuario existe
+            if (usuarioOptional.isPresent()) {
+                // Llamar al servicio para cambiar su estado a INACTIVO
+                usuarioServicio.eliminarUsuarioLogicamente(id);
+                flash.addFlashAttribute("success", "Usuario desactivado con éxito");
             } else {
                 flash.addFlashAttribute("error", "El usuario no existe");
             }
         } catch (Exception e) {
-            flash.addFlashAttribute("error", "Error al eliminar el usuario");
+            flash.addFlashAttribute("error", "Error al desactivar el usuario");
+        }
+        return "redirect:/usuarios";
+    }
+
+    @PostMapping("/reactivar/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String reactivarUsuario(@PathVariable Long id, RedirectAttributes flash) {
+        try {
+            Optional<Usuario> usuarioOptional = usuarioServicio.findById(id);
+            if (usuarioOptional.isPresent()) {
+                Usuario usuario = usuarioOptional.get();
+                // Cambiar el estado del usuario a ACTIVO
+                usuario.setEstado(Estado.ACTIVO);
+                usuarioServicio.save(usuario);
+                flash.addFlashAttribute("success", "Usuario reactivado con éxito");
+            } else {
+                flash.addFlashAttribute("error", "El usuario no existe");
+            }
+        } catch (Exception e) {
+            flash.addFlashAttribute("error", "Error al reactivar el usuario");
         }
         return "redirect:/usuarios";
     }

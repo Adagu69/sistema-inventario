@@ -1,6 +1,7 @@
 package com.clinica.sistema.inventario.service;
 
 import com.clinica.sistema.inventario.controlador.dto.UsuarioRegistroDTO;
+import com.clinica.sistema.inventario.model.Estado;
 import com.clinica.sistema.inventario.model.Rol;
 import com.clinica.sistema.inventario.model.Usuario;
 import com.clinica.sistema.inventario.repository.UsuarioRepositorio;
@@ -44,12 +45,14 @@ public class UsuarioServicio implements IUsuarioServicio, UserDetailsService {
             roles.add(new Rol("ROLE_USER"));
         }
 
+        // Crear el usuario con estado ACTIVO
         Usuario usuario = new Usuario(
                 registroDTO.getNombre(),
                 registroDTO.getApellido(),
                 registroDTO.getEmail(),
                 passwordEncoder.encode(registroDTO.getPassword()),
-                roles);
+                roles,
+                Estado.ACTIVO);
 
         return usuarioRepositorio.save(usuario);
     }
@@ -103,19 +106,28 @@ public class UsuarioServicio implements IUsuarioServicio, UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-//    Método para actualizar un usuario existente
-//    public Usuario actualizarUsuario(Long id, Usuario detallesUsuario) {
-//        Usuario usuario = usuarioRepositorio.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-//
-//        // Actualizar los campos según los detalles proporcionados
-//        usuario.setNombre(detallesUsuario.getNombre());
-//        usuario.setApellido(detallesUsuario.getApellido());
-//        usuario.setEmail(detallesUsuario.getEmail());
-//        // Puedes actualizar otros campos adicionales aquí
-//
-//        return usuarioRepositorio.save(usuario);
-//    }
+    public void eliminarUsuarioLogicamente(Long id) {
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            // Cambiar el estado del usuario a INACTIVO
+            usuario.setEstado(Estado.INACTIVO);  // Esto es clave: Cambiar el estado
+            usuarioRepositorio.save(usuario);    // Guardar los cambios
+        }
+    }
+
+    // Archivo: UsuarioServicio.java
+
+    public Page<Usuario> buscarUsuarios(String buscar, Pageable pageable) {
+        // Usamos un query personalizado para buscar por nombre, apellido, email o estado
+        return usuarioRepositorio.findByNombreContainingOrApellidoContainingOrEmailContainingOrEstadoIgnoreCase(
+                buscar, buscar, buscar, Estado.valueOf(buscar.toUpperCase()), pageable);
+    }
+
+    // Método para buscar por nombre
+    public Page<Usuario> buscarUsuariosPorNombre(String nombre, Pageable pageable) {
+        return usuarioRepositorio.findByNombreContaining(nombre, pageable); // Buscar por nombre
+    }
 
 }
 

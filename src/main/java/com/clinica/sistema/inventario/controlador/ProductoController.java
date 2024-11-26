@@ -3,10 +3,13 @@ package com.clinica.sistema.inventario.controlador;
 import com.clinica.sistema.inventario.model.Categoria;
 import com.clinica.sistema.inventario.model.Producto;
 import com.clinica.sistema.inventario.model.Proveedor;
+import com.clinica.sistema.inventario.repository.ProductoRepositorio;
 import com.clinica.sistema.inventario.service.CategoriaServicio;
 import com.clinica.sistema.inventario.service.ProductoServicio;
 import com.clinica.sistema.inventario.service.ProveedorServicio;
 import com.clinica.sistema.inventario.util.paginacion.PageRender;
+import com.clinica.sistema.inventario.util.reportes.ProductoExporterPDF;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +37,9 @@ public class ProductoController {
 
     @Autowired
     private ProveedorServicio proveedorServicio;
+
+    @Autowired
+    private ProductoRepositorio productoRepositorio;
 
     @GetMapping("/producto")
     public String listarProductos(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
@@ -133,4 +139,27 @@ public class ProductoController {
         }
         return "redirect:/producto";
     }
+
+    // Buscar productos por nombre
+    @GetMapping("/producto/buscar")
+    public String buscarProductos(@RequestParam("nombreProducto") String nombreProducto, Model model) {
+        List<Producto> productos = productoRepositorio.findByNombreContainingIgnoreCase(nombreProducto);
+        model.addAttribute("productos", productos); // Pasar los productos filtrados a la vista
+        return "producto"; // Redirigir a la vista producto.html
+    }
+
+    // Generar el reporte PDF para productos
+    @GetMapping("/productos/exportar")
+    public void exportarProductos(HttpServletResponse response) throws Exception {
+        response.setContentType("application/pdf");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=productos_report.pdf";
+        response.setHeader(headerKey, headerValue);
+
+        List<Producto> productos = productoRepositorio.findAll();
+        ProductoExporterPDF exporter = new ProductoExporterPDF(productos);
+        exporter.exportar(response);
+    }
+
+
 }

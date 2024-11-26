@@ -5,6 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Usuarios</title>
+
+    <style>
+        /* Estilos para el estado del usuario */
+        .table .estado-activo  {
+            color: white;
+            background-color: green;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .table .estado-inactivo {
+            color: white;
+            background-color: red;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+
 </head>
 <body>
 <div class="main-content container-fluid" layout:fragment="content">
@@ -125,6 +145,14 @@
                     </div>
                 </div>
 
+                <!-- Formulario de búsqueda -->
+                <form action="#" method="get">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="buscar" placeholder="Buscar" />
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                    </div>
+                </form>
+
 
                 <div class="card-body px-0 pb-0">
                     <div class="table-responsive">
@@ -137,6 +165,7 @@
                                 <th class="text-center">Apellido</th>
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Rol</th>
+                                <th class="text-center">Estado</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                             </thead>
@@ -153,21 +182,32 @@
                                           class="badge bg-primary me-1"></span>
                                 </td>
                                 <td>
+                                    <!-- Aquí cambiamos la lógica para comparar con el valor de la enumeración -->
+                                    <span th:style="${usuario.estado == T(com.clinica.sistema.inventario.model.Estado).ACTIVO ? 'background-color: green; color: white; padding: 5px; border-radius: 3px; font-weight: bold;' : 'background-color: red; color: white; padding: 5px; border-radius: 3px; font-weight: bold;'}"
+                                          th:text="${usuario.estado}"></span>
+                                </td>
+                                <td>
                                     <div class="d-flex gap-1 justify-content-center">
                                         <!-- Botón Editar -->
                                         <button th:if="${isAdmin}"
-                                                class="btn btn-light active"
+                                                class="btn btn-warning active"
                                                 data-bs-toggle="modal"
                                                 th:data-bs-target="'#editUsuarioModal' + ${usuario.idUsuario}">
                                             Editar
                                         </button>
 
-                                        <!-- Botón Eliminar -->
-                                        <button type="button" class="btn btn-outline-danger"
-                                                th:data-bs-target="${'#deleteModal' + usuario.idUsuario}"
-                                                data-bs-toggle="modal">
-                                            Eliminar
+                                        <!-- Botón para abrir el modal -->
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                th:data-bs-target="${'#deleteModal' + usuario.idUsuario}">
+                                            Desactivar
                                         </button>
+
+                                        <!-- Botón para abrir el modal de reactivar -->
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                                th:data-bs-target="'#reactivateModal' + ${usuario.idUsuario}">
+                                            Reactivar
+                                        </button>
+
                                     </div>
                                 </td>
 
@@ -240,35 +280,53 @@
                                     </div>
                                 </div>
 
-                                <!-- Modal Eliminar -->
-                                <div class="modal fade text-left" th:id="${'deleteModal' + usuario.idUsuario}"
-                                     tabindex="-1" role="dialog"
-                                     th:aria-labelledby="${'deleteModalLabel' + usuario.idUsuario}"
-                                     aria-hidden="true">
+                                <!-- Modal para confirmar la desactivación -->
+                                <div class="modal fade" th:id="${'deleteModal' + usuario.idUsuario}" tabindex="-1" role="dialog"
+                                     th:aria-labelledby="${'deleteModalLabel' + usuario.idUsuario}" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-scrollable" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title"
-                                                    th:id="${'deleteModalLabel' + usuario.idUsuario}">Confirmar
-                                                    Eliminación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
+                                                <h5 class="modal-title" th:id="${'deleteModalLabel' + usuario.idUsuario}">Confirmar Desactivación</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <p>¿Seguro que desea eliminar la categoría?</p>
+                                                <p>¿Seguro que desea desactivar al usuario?</p>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Cerrar
-                                                </button>
-                                                <form th:action="@{/usuarios/eliminar/{id}(id=${usuario.idUsuario})}"
-                                                      method="post" style="display: inline;">
-                                                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                <form th:action="@{/usuarios/eliminar/{id}(id=${usuario.idUsuario})}" method="post">
+                                                    <button type="submit" class="btn btn-danger">Desactivar</button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Modal de Reactivación -->
+                                <div th:each="usuario : ${usuarios}">
+                                    <div class="modal fade" th:id="'reactivateModal' + ${usuario.idUsuario}" tabindex="-1"
+                                         aria-labelledby="reactivateModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="reactivateModalLabel">Reactivar Usuario</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Estás seguro de que deseas reactivar a este usuario?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <!-- El formulario para reactivar -->
+                                                    <form th:action="@{/usuarios/reactivar/{id}(id=${usuario.idUsuario})}" method="post">
+                                                        <button type="submit" class="btn btn-success">Reactivar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                             </tr>
 

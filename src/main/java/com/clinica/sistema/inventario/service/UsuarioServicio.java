@@ -129,5 +129,10 @@ public class UsuarioServicio implements IUsuarioServicio, UserDetailsService {
         return usuarioRepositorio.findByNombreContaining(nombre, pageable); // Buscar por nombre
     }
 
+//    // Metodo para findByUsername
+//    public Usuario findByUsername(String username) {
+//        return usuarioRepositorio.findByUsername(username);
+//    }
+
 }
 

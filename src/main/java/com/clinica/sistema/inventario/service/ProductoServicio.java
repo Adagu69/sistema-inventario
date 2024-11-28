@@ -30,6 +30,11 @@ public class ProductoServicio implements IProductoServicio {
     }
 
     @Override
+    public List<Producto> findAll() {
+        return productoRepositorio.findAll();
+    }
+
+    @Override
     public Producto findOne(Long idProducto) {
         return productoRepositorio.findById(idProducto).orElse(null);
     }

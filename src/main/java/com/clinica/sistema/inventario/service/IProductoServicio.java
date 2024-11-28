@@ -14,6 +14,8 @@ public interface IProductoServicio {
 
     public Page<Producto> findAll(Pageable pageable);
 
+    public List<Producto> findAll();
+
     public Producto findOne(Long idProducto);
 
     public void save(Producto producto);

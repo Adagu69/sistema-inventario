@@ -72,4 +72,9 @@ public class Usuario {
     public Usuario() {
 
     }
+
+//    public String getRol(){
+//        List<Rol> roles = (List<Rol>) this.getRoles();
+//        return roles.get(0).getNombre();
+//    }
 }

@@ -25,4 +25,6 @@ public interface IUsuarioServicio {
     public void save(Usuario usuario);
 
     public void delete(Long id);
+
+//    public Usuario findByUsername(String username);
 }

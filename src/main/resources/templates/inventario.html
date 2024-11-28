@@ -34,6 +34,7 @@
                 <th>Cantidad</th>
                 <th>Precio</th>
                 <th>Estado</th>
+                <th>Total</th>
                 <th>Fecha</th> <!-- Nueva columna para la fecha -->
             </tr>
             </thead>
@@ -44,6 +45,7 @@
                 <td th:text="${inventario.cantidad}"></td> <!-- Cantidad en inventario -->
                 <td th:text="${inventario.precio}"></td> <!-- Precio del producto -->
                 <td th:text="${inventario.estado}"></td> <!-- Estado del inventario -->
+                <td th:text="${inventario.cantidad * inventario.precio}"></td> <!-- Total del inventario -->
                 <td th:text="${inventario.fecha}"></td> <!-- Fecha del inventario -->
             </tr>
             </tbody>

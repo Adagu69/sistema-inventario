@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/dashboard}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+
+    <h1>Gestión de Movimientos</h1>
+
+    <!-- Formulario para registrar entrada -->
+    <h2>Registrar Entrada</h2>
+    <form th:action="@{/movimientos/entrada}" th:object="${movimientoEntrada}" method="post">
+        <div class="mb-3">
+        <label for="productoEntrada">Producto:</label>
+        <select id="productoEntrada" name="producto.idProducto" th:field="*{producto.idProducto}">
+            <option th:each="producto : ${productos}"
+                    th:value="${producto.idProducto}"
+                    th:text="${producto.nombre}">
+            </option>
+        </select>
+        </div>
+        <div class="mb-3">
+            <label for="cantidadEntrada">Cantidad:</label>
+            <input type="number" id="cantidadEntrada" name="cantidad" th:field="*{cantidad}" required>
+        </div>
+        <div class="mb-3">
+            <label for="precioEntrada">Precio:</label>
+            <input type="number" id="precioEntrada" name="precio" th:field="*{precio}" step="0.01" required>
+        </div>
+        <div class="mb-3">
+            <label for="motivoEntrada">Motivo:</label>
+            <input type="text" id="motivoEntrada" name="motivo" th:field="*{motivo}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Entrada</button>
+    </form>
+
+    <!-- Formulario para registrar salida -->
+    <h2>Registrar Salida</h2>
+    <form th:action="@{/movimientos/salida}" th:object="${movimientoSalida}" method="post">
+        <div class="mb-3">
+            <label for="productoSalida">Producto:</label>
+            <select id="productoSalida" name="producto.idProducto" th:field="*{producto.idProducto}">
+                <option th:each="producto : ${productos}"
+                        th:value="${producto.idProducto}"
+                        th:text="${producto.nombre}">
+                </option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="cantidadSalida">Cantidad:</label>
+            <input type="number" id="cantidadSalida" name="cantidad" th:field="*{cantidad}" required>
+        </div>
+        <div class="mb-3">
+            <label for="precioSalida">Precio:</label>
+            <input type="number" id="precioSalida" name="precio" th:field="*{precio}" step="0.01" required>
+        </div>
+        <div class="mb-3">
+            <label for="motivoSalida">Motivo:</label>
+            <input type="text" id="motivoSalida" name="motivo" th:field="*{motivo}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Salida</button>
+    </form>
+
+    <!-- Tabla de movimientos -->
+    <h2>Historial de Movimientos</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Motivo</th>
+            <th>Precio</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="movimiento : ${movimientos}">
+            <td th:text="${movimiento.idMovimiento}"></td>
+            <td th:text="${movimiento.producto.nombre}"></td>
+            <td th:text="${movimiento.tipo}"></td>
+            <td th:text="${movimiento.cantidad}"></td>
+            <td th:text="${movimiento.motivo}"></td>
+            <td th:text="${movimiento.precio}"></td>
+            <td th:text="${movimiento.total}"></td>
+            <td th:text="${movimiento.estado}"></td>
+            <td th:text="${#dates.format(movimiento.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

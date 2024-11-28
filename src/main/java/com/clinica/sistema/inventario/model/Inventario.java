@@ -30,6 +30,6 @@ public class Inventario {
     private String estado;
 
     @ManyToOne // anotacion que indica que la relacion es de muchos a uno
-    @JoinColumn(name = "producto_id")
+    @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 }

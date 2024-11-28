@@ -2,6 +2,7 @@ package com.clinica.sistema.inventario.controlador;
 
 import com.clinica.sistema.inventario.model.Inventario;
 import com.clinica.sistema.inventario.repository.InventarioRepositorio;
+import com.clinica.sistema.inventario.service.InventarioServicio;
 import com.clinica.sistema.inventario.util.reportes.InventarioExporterPDF;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class InventarioController {
 
     @Autowired
     private InventarioRepositorio inventarioRepositorio;
+    @Autowired
+    private InventarioServicio inventarioServicio;
 
     // Mostrar inventarios con productos asociados
     @GetMapping("/inventario")
@@ -31,7 +34,7 @@ public class InventarioController {
     // Buscar inventarios por nombre del producto
     @GetMapping("/inventario/buscar")
     public String buscarInventarios(@RequestParam("nombreProducto") String nombreProducto, Model model) {
-        List<Inventario> inventarios = inventarioRepositorio.findByProductoNombreContainingIgnoreCase(nombreProducto);
+        List<Inventario> inventarios = inventarioServicio.findByProductoNombreContainingIgnoreCase(nombreProducto);
         model.addAttribute("inventarios", inventarios); // Pasar los inventarios filtrados a la vista
         return "inventario"; // Redirigir a la vista inventario.html
     }

@@ -26,6 +26,11 @@ public class InventarioServicio implements IInventarioServicio {
     }
 
     @Override
+    public List<Inventario> findAll() {
+        return inventarioRepositorio.findAll();
+    }
+
+    @Override
     public Inventario findByIdInventario(Long idInventario) {
         return inventarioRepositorio.findByIdInventario(idInventario);
     }

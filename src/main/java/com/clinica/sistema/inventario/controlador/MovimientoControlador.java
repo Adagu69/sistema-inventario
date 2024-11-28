@@ -29,6 +29,7 @@ import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/movimientos")
@@ -73,6 +74,18 @@ public class MovimientoControlador {
 
             movimientoServicio.save(movimiento);
 
+            // Actualizar inventario
+            Inventario inventario = inventarioServicio.findByProductoIdProducto(movimiento.getProducto().getIdProducto());
+            if (inventario == null) {
+                inventario = new Inventario();
+                inventario.setProducto(movimiento.getProducto());
+            }
+            inventario.setCantidad(inventario.getCantidad() + movimiento.getCantidad());
+            inventario.setPrecio(movimiento.getPrecio());
+            inventario.setEstado("ACTIVO");
+            inventario.setFecha(String.valueOf(movimiento.getFecha()));
+            inventarioServicio.save(inventario);
+
             redirectAttributes.addFlashAttribute("mensaje", "Entrada registrada correctamente");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
@@ -101,6 +114,17 @@ public class MovimientoControlador {
 
             movimientoServicio.save(movimiento);
 
+
+            // Actualizar inventario
+            Inventario inventario = inventarioServicio.findByProductoIdProducto(movimiento.getProducto().getIdProducto());
+            if (inventario != null) {
+                inventario.setCantidad(inventario.getCantidad() - movimiento.getCantidad());
+                inventario.setPrecio(movimiento.getPrecio());
+                inventario.setEstado("ACTIVO");
+                inventario.setFecha(String.valueOf(movimiento.getFecha()));
+                inventarioServicio.save(inventario);
+            }
+
             redirectAttributes.addFlashAttribute("mensaje", "Salida registrada correctamente");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         } catch (Exception e) {
@@ -109,4 +133,5 @@ public class MovimientoControlador {
         }
         return "redirect:/movimientos";
     }
+
 }

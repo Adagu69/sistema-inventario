@@ -41,11 +41,14 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex ">
 
-                        <!-- Botón para exportar reporte en PDF -->
-                        <form action="/usuarios/exportar" method="get">
-                            <button type="submit" class="btn btn-primary">
-                                Generar Reporte PDF
-                            </button>
+                        <!-- Formulario para generar reporte por fecha -->
+                        <form action="/usuarios/exportarPorFecha" method="get" class="d-flex mb-4">
+                            <button type="submit" class="btn btn-primary">Generar Reporte por Fecha</button>
+                        </form>
+
+                        <!-- Botón para generar el reporte de usuarios inactivos -->
+                        <form method="get" action="/usuarios/exportarInactivos" style="display: inline;">
+                            <button type="submit" class="btn btn-primary">Generar reporte de usuarios inactivos</button>
                         </form>
 
                         <button th:if="${isAdmin}"
@@ -125,6 +128,13 @@
                                                     <option value="ADMIN">Administrador</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Campo de Fecha -->
+                                            <div>
+                                                <label for="fecha">Fecha:</label>
+                                                <input type="date" id="fecha" name="fecha" required>
+                                            </div>
+
                                         </div>
 
                                         <div class="modal-footer">
@@ -166,6 +176,7 @@
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Rol</th>
                                 <th class="text-center">Estado</th>
+                                <th class="text-center">Fecha</th> <!-- Nueva columna para la fecha -->
                                 <th class="text-center">Acciones</th>
                             </tr>
                             </thead>
@@ -184,8 +195,10 @@
                                 <td>
                                     <!-- Aquí cambiamos la lógica para comparar con el valor de la enumeración -->
                                     <span th:style="${usuario.estado == T(com.clinica.sistema.inventario.model.Estado).ACTIVO ? 'background-color: green; color: white; padding: 5px; border-radius: 3px; font-weight: bold;' : 'background-color: red; color: white; padding: 5px; border-radius: 3px; font-weight: bold;'}"
-                                          th:text="${usuario.estado}"></span>
+                                          th:text="${usuario.estado }"></span>
                                 </td>
+                                <td class="text-center" th:text="${usuario.usuarioFecha.fecha}"></td><!-- Mostrar la fecha -->
+
                                 <td>
                                     <div class="d-flex gap-1 justify-content-center">
                                         <!-- Botón Editar -->
@@ -338,7 +351,6 @@
             </div>
         </div>
     </section>
-</div>
 </div>
 </body>
 </html>

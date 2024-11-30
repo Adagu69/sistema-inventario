@@ -2,6 +2,9 @@ package com.clinica.sistema.inventario.service;
 
 import com.clinica.sistema.inventario.model.Inventario;
 import com.clinica.sistema.inventario.model.Movimiento;
+import com.clinica.sistema.inventario.model.Producto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

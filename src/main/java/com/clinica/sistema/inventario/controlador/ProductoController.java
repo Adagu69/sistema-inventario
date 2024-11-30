@@ -44,7 +44,6 @@ public class ProductoController {
     @GetMapping("/producto")
     public String listarProductos(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         try {
-            // Configuración de seguridad
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             boolean isAdmin = false;
             if(authentication != null && authentication.getAuthorities().stream()
@@ -70,8 +69,8 @@ public class ProductoController {
             model.addAttribute("categorias", categoriaServicio.listarCategorias());
             model.addAttribute("proveedores", proveedorServicio.listarProveedores());
             model.addAttribute("page", new PageRender<>("/producto", productosPage));
-
             return "ProductoListar";
+
         } catch (Exception e) {
             model.addAttribute("error", "Error al cargar la página: " + e.getMessage());
             return "error";

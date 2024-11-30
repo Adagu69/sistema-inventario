@@ -13,15 +13,16 @@ import com.clinica.sistema.inventario.service.UsuarioServicio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -48,12 +49,24 @@ public class MovimientoControlador {
     private UsuarioServicio usuarioServicio;
 
     @GetMapping
-    public String mostrarRegistroMovimientos(Model model) {
+    public String mostrarRegistroMovimientos(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = false;
+            if (authentication != null && authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                isAdmin = true;
+            }
+            model.addAttribute("isAdmin", isAdmin);
+
         model.addAttribute("productos", productoService.findAll());
         model.addAttribute("movimientoEntrada", new Movimiento());
         model.addAttribute("movimientoSalida", new Movimiento());
         model.addAttribute("movimientos", movimientoServicio.findAll());
         return "MovimientoListar";
+    } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/entrada")

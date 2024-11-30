@@ -8,8 +8,20 @@
 <body>
 <div class="main-content container-fluid" layout:fragment="content">
   <div class="page-title">
-    <h3>Lista de Proveedores</h3>
-    <p class="text-subtitle text-muted"></p>
+    <div class="row">
+      <div class="col-12 col-md-6 order-md-1 order-last">
+        <h3>LISTA DE PROVEEDORES</h3>
+        <p class="text-subtitle text-muted"></p>
+      </div>
+      <div class="col-12 col-md-6 order-md-2 order-first">
+        <nav aria-label="breadcrumb" class='breadcrumb-header'>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Lista de proveedores</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
   </div>
 
   <section class="section">
@@ -103,8 +115,7 @@
                 <th>Nombre</th>
                 <th>Direccion</th>
                 <th>Correo</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
+                <th th:if="${isAdmin}">Acciones</th>
               </tr>
               </thead>
               <tbody>
@@ -113,9 +124,9 @@
                 <td th:text="${proveedores.nombre }"></td>
                 <td th:text="${proveedores.direccion }"></td>
                 <td th:text="${proveedores.correo }"></td>
-                <td>
-                  <button th:if="${isAdmin}"
-                          class="btn btn-primary active"
+                <td th:if="${isAdmin}" class="d-flex gap-2">
+                  <button
+                          class="btn btn-primary btn-sm"
                           data-bs-toggle="modal"
                           th:data-bs-target="'#editProveedorModal' +  ${proveedores.idProveedor}">
                     Editar
@@ -187,11 +198,9 @@
                       </div>
                     </div>
                   </div>
-                </td>
 
-                <td th:if="${isAdmin}">
                   <!-- Botón que abre el modal -->
-                  <button type="button" class="btn btn-outline-primary block" th:data-bs-target="'#deleteModal' + ${proveedores.idProveedor}" data-bs-toggle="modal">
+                  <button type="button" class="btn btn-danger btn-sm" th:data-bs-target="'#deleteModal' + ${proveedores.idProveedor}" data-bs-toggle="modal">
                     Eliminar
                   </button>
 
@@ -217,15 +226,18 @@
                     </div>
                   </div>
                 </td>
+
                 </tr>
                 </tbody>
                 </table>
-            <nav th:replace="pages/paginator-nav :: paginator"></nav>
+            <div class="d-flex justify-content-center">
+              <nav th:replace="pages/paginator-nav :: paginator"></nav>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+</div>
   </section>
   </div>
   </div>

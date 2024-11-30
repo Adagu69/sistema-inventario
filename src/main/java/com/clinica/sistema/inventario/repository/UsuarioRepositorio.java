@@ -18,7 +18,4 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 
     // Método para buscar por nombre
     Page<Usuario> findByNombreContaining(String nombre, Pageable pageable);
-
-//    // Método para buscar por nombre de usuario
-//    public Usuario findByUsername(String username);
 }

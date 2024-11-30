@@ -9,6 +9,8 @@ import com.clinica.sistema.inventario.model.Usuario;
 import com.clinica.sistema.inventario.service.UsuarioServicio;
 import com.clinica.sistema.inventario.util.paginacion.PageRender;
 import com.clinica.sistema.inventario.util.reportes.UsuarioExporterPDF;
+import com.clinica.sistema.inventario.util.reportes.UsuarioFechaExporterPDF;
+import com.clinica.sistema.inventario.util.reportes.UsuariosInactivosExporterPDF;
 import com.lowagie.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -52,7 +56,7 @@ public class UsuarioControlador {
 
         model.addAttribute("isAdmin", isAdmin);
 
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 10);
         Page<Usuario> usuarios;
 
         // Si el parámetro 'buscar' no es null o vacío, realizar la búsqueda por nombre
@@ -72,10 +76,13 @@ public class UsuarioControlador {
         return "UsuarioListar";
     }
 
+
+
     @PostMapping("/guardar")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String guardarUsuario(@Valid @ModelAttribute Usuario usuario,
                                  @RequestParam("role") String role, // Recibimos el parámetro del rol
+                                 @RequestParam("fecha") String fecha, // Recibimos la fecha desde el formulario
                                  BindingResult result,
                                  RedirectAttributes flash) {
         if (result.hasErrors()) {
@@ -84,6 +91,10 @@ public class UsuarioControlador {
         }
 
         try {
+
+            // Convertir la fecha de String a LocalDate
+            LocalDate fechaCreacion = LocalDate.parse(fecha);
+
             // Asignar el rol al usuario
             List<Rol> roles = new ArrayList<>();
             if ("ADMIN".equals(role)) {
@@ -96,7 +107,8 @@ public class UsuarioControlador {
             // Asignar el estado como ACTIVO
             usuario.setEstado(Estado.ACTIVO);
 
-            usuarioServicio.save(usuario);
+            // Asignar la fecha de creación
+            usuario.setFecha(fechaCreacion);
 
             // Guardar el usuario
             usuarioServicio.save(usuario);
@@ -174,6 +186,8 @@ public class UsuarioControlador {
         return "redirect:/usuarios";
     }
 
+
+
     @ModelAttribute("roles")
     public List<String> getRoles() {
         return Arrays.asList("USER", "ADMIN");
@@ -197,5 +211,40 @@ public class UsuarioControlador {
         // Exportar el PDF
         exporter.exportar(response);
     }
+
+    // Método para exportar el reporte de usuarios por fecha en PDF con Jakarta EE
+    @GetMapping("/exportarPorFecha")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void exportarReportePorFecha(HttpServletResponse response) throws DocumentException, IOException {
+        // Obtener todos los usuarios
+        List<Usuario> usuarios = usuarioServicio.listarUsuarios();
+
+        // Crear el exportador de PDF para el reporte por fecha
+        UsuarioFechaExporterPDF exporter = new UsuarioFechaExporterPDF();
+
+        // Configurar la respuesta HTTP para que sea un archivo PDF
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=usuarios_por_fecha.pdf");
+
+        // Exportar el PDF con la lista de usuarios
+        exporter.generarReportePorFecha(usuarios, response);
+    }
+
+    @GetMapping("/exportarInactivos")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void exportarUsuariosInactivosEnPDF(HttpServletResponse response) throws IOException {
+        // Obtener todos los usuarios y filtrar los inactivos
+        List<Usuario> usuariosInactivos = usuarioServicio.listarUsuarios().stream()
+                .filter(usuario -> usuario.getEstado() == Estado.INACTIVO)
+                .collect(Collectors.toList());
+
+        // Crear el exportador de PDF
+        UsuariosInactivosExporterPDF exporter = new UsuariosInactivosExporterPDF();
+
+        // Exportar el PDF
+        exporter.exportar(usuariosInactivos, response);
+    }
+
+
 }
 

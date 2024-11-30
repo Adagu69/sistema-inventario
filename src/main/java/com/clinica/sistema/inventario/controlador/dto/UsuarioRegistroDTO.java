@@ -1,5 +1,7 @@
 package com.clinica.sistema.inventario.controlador.dto;
 
+import java.time.LocalDate;
+
 public class UsuarioRegistroDTO {
 
     private Long idUsuario;
@@ -7,14 +9,16 @@ public class UsuarioRegistroDTO {
     private String apellido;
     private String email;
     private String password;
+    private LocalDate fecha;  // Nuevo campo para la fecha
 
 
-    public UsuarioRegistroDTO(String nombre, String apellido, String email, String password) {
+    public UsuarioRegistroDTO(String nombre, String apellido, String email, String password, LocalDate fecha) {
         super();
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
+        this.fecha = fecha;
     }
 
     public UsuarioRegistroDTO() {
@@ -60,7 +64,14 @@ public class UsuarioRegistroDTO {
         return password;
     }
 
+    // Getters y setters
+    public LocalDate getFecha() {
+        return fecha;
+    }
 
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
 
 
 }

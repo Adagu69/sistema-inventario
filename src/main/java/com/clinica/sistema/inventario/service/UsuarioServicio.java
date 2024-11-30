@@ -1,9 +1,11 @@
 package com.clinica.sistema.inventario.service;
 
+import com.clinica.sistema.inventario.controlador.UsuarioControlador;
 import com.clinica.sistema.inventario.controlador.dto.UsuarioRegistroDTO;
 import com.clinica.sistema.inventario.model.Estado;
 import com.clinica.sistema.inventario.model.Rol;
 import com.clinica.sistema.inventario.model.Usuario;
+import com.clinica.sistema.inventario.model.UsuarioFecha;
 import com.clinica.sistema.inventario.repository.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,17 +48,25 @@ public class UsuarioServicio implements IUsuarioServicio, UserDetailsService {
             roles.add(new Rol("ROLE_USER"));
         }
 
-        // Crear el usuario con estado ACTIVO
+        // Obtener la fecha actual si no se pasa una en el DTO
+        LocalDate fecha = registroDTO.getFecha() != null ? registroDTO.getFecha() : LocalDate.now();
+
+        // Crear un objeto UsuarioFecha con la fecha
+        UsuarioFecha usuarioFecha = new UsuarioFecha(fecha);
+
+        // Crear el usuario con estado ACTIVO y la fecha embebida
         Usuario usuario = new Usuario(
                 registroDTO.getNombre(),
                 registroDTO.getApellido(),
                 registroDTO.getEmail(),
                 passwordEncoder.encode(registroDTO.getPassword()),
                 roles,
-                Estado.ACTIVO);
+                Estado.ACTIVO,
+                usuarioFecha);  // Pasa el objeto UsuarioFecha al constructor
 
         return usuarioRepositorio.save(usuario);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -129,9 +140,18 @@ public class UsuarioServicio implements IUsuarioServicio, UserDetailsService {
         return usuarioRepositorio.findByNombreContaining(nombre, pageable); // Buscar por nombre
     }
 
-//    // Metodo para findByUsername
-//    public Usuario findByUsername(String username) {
-//        return usuarioRepositorio.findByUsername(username);
+//    Método para actualizar un usuario existente
+//    public Usuario actualizarUsuario(Long id, Usuario detallesUsuario) {
+//        Usuario usuario = usuarioRepositorio.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+//
+//        // Actualizar los campos según los detalles proporcionados
+//        usuario.setNombre(detallesUsuario.getNombre());
+//        usuario.setApellido(detallesUsuario.getApellido());
+//        usuario.setEmail(detallesUsuario.getEmail());
+//        // Puedes actualizar otros campos adicionales aquí
+//
+//        return usuarioRepositorio.save(usuario);
 //    }
 
 }

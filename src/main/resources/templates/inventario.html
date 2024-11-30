@@ -4,29 +4,59 @@
 <head>
     <meta charset="utf-8">
     <title>Gestión de Inventario</title>
-    <!-- Bootstrap -->
 
 </head>
 <body>
 <div class="main-content container-fluid" layout:fragment="content">
-    <div class="container"> <br><br><br><br><br><br>
-        <h1>Gestión de Inventario</h1>
 
+    <div class="main-content container-fluid">
+
+        <div class="page-title">
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-1 order-last">
+                    <h3>GESTION DE INVENTARIO</h3>
+                    <p class="text-subtitle text-muted"></p>
+                </div>
+                <div class="col-12 col-md-6 order-md-2 order-first">
+                    <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Lista de Inventario</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+        <div class="col-md-6">
         <!-- Botón para exportar reporte en PDF -->
         <form action="/inventario/exportar" method="get">
-            <button type="submit" class="btn btn-primary mb-3">
+            <button type="submit" class="btn icon icon-left btn-danger"><i data-feather="file"></i>
                 Generar Reporte PDF
             </button>
         </form>
+        </div>
 
+        <div class="col-md-6">
         <!-- Formulario de búsqueda -->
         <form action="/inventario/buscar" method="get" class="mb-3">
             <input type="text" name="nombreProducto" placeholder="Buscar por nombre del producto" class="form-control d-inline-block" style="width: 300px;">
             <button type="submit" class="btn btn-primary">Buscar</button>
         </form>
+        </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Mostrar los inventarios con productos -->
-        <table class="table table-striped">
+        <section class="section">
+            <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+        <table class="table table-hover mb-0">
             <thead>
             <tr>
                 <th>ID Inventario</th>
@@ -50,6 +80,10 @@
             </tr>
             </tbody>
         </table>
+            </div>
+        </div>
+    </div>
+    </section>
     </div>
 </div>
 

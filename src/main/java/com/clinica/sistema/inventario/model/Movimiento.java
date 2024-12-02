@@ -35,6 +35,9 @@ public class Movimiento {
     @Column(name = "total")
     private double total;
 
+    @Column(name = "motivo")
+    private String Motivo;
+
     @Column(name = "estado")
     private String estado;
 
@@ -43,9 +46,6 @@ public class Movimiento {
     private Producto producto;
 
     @ManyToOne
-    @JoinColumn(name = "area_id")
+    @JoinColumn(name = "rol_id")
     private Rol rol;
-
-
-
 }

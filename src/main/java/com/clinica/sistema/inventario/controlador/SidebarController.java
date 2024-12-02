@@ -20,4 +20,6 @@ public class SidebarController {
         }
         return "pages/landing_page";
     }
+
+
 }

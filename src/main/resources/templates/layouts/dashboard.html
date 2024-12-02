@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}">
     <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="shortcut icon" th:href="@{/images/favicon.svg}" type="image/x-icon">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 </head>
 
 <body>
@@ -24,7 +24,7 @@
         <div class="main-content container-fluid" layout:fragment="content"><!--dynamic content-->
             <!--you can replace this using page-->
         </div>
-                <span th:replace="fragments/footer :: footer"></span>
+        <span th:replace="fragments/footer :: footer"></span>
     </div>
 </div>
 <script th:src="@{/js/feather.min.js}"></script>
